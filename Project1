@@ -1,0 +1,13 @@
+public class Lab1 {
+    public static int summation(int n){
+        if(n == 0) {
+            return 0;
+        }else{
+            return 2 * summation(n-1) + 5;
+
+        }
+    }
+    public static void main(String [] args){
+        System.out.println(summation(1));
+    }
+}
