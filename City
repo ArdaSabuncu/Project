@@ -1,0 +1,90 @@
+public class City {
+    private int AB;
+    private int AC;
+    private int BD;
+    private int BC;
+    private int CD;
+    private int CE;
+    private int DE;
+
+public City(){
+ AB = 20;
+ AC = 30;
+ BD = 40;
+ BC = 70;
+ CD = 20;
+ CE = 10;
+ DE = 40;
+ }
+
+    public void setAB(int AB) {
+        this.AB = AB;
+    }
+
+    public void setAC(int AC) {
+        this.AC = AC;
+    }
+
+    public void setBC(int BC) {
+        this.BC = BC;
+    }
+
+    public void setBD(int BD) {
+        this.BD = BD;
+    }
+
+    public void setCD(int CD) {
+        this.CD = CD;
+    }
+
+    public void setCE(int CE) {
+        this.CE = CE;
+    }
+
+    public void setDE(int DE) {
+        this.DE = DE;
+    }
+
+    public int getAB() {
+        return AB;
+    }
+
+    public int getAC() {
+        return AC;
+    }
+
+    public int getBC() {
+        return BC;
+    }
+
+    public int getBD() {
+        return BD;
+    }
+
+    public int getCD() {
+        return CD;
+    }
+
+    public int getCE() {
+        return CE;
+    }
+
+    public int getDE() {
+        return DE;
+    }
+    public void Info(){
+    System.out.println("5");
+    System.out.println("A B C D E");
+    System.out.println("7");
+    System.out.println("A B "+ AB );
+    System.out.println("A C "+ AC );
+    System.out.println("B C "+ BC );
+    System.out.println("B D "+ BD );
+    System.out.println("C D "+ CD );
+    System.out.println("C E "+ CE );
+    System.out.println("D E "+ DE );
+
+    }
+
+
+}
