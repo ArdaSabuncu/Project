@@ -13,78 +13,47 @@ public City(){
  BD = 40;
  BC = 70;
  CD = 20;
- CE = 10;
+ CE = 50;
  DE = 40;
  }
+    public void Info() {
+        System.out.println("5");
+        System.out.println("A B C D E");
+        System.out.println("7");
+        System.out.println("A B " + AB);
+        System.out.println("A C " + AC);
+        System.out.println("B C " + BC);
+        System.out.println("B D " + BD);
+        System.out.println("C D " + CD);
+        System.out.println("C E " + CE);
+        System.out.println("D E " + DE);
+        System.out.println("A E ");
+        int[] dizi = {AB + BC + CD + DE, AB + BC + CE, AB + BD + DE, AC + CD + DE, AC + CE};
+        int min = dizi[0];
+        for (int i = 0; i < dizi.length; i++) {
+            if (dizi[i] < min)
+                min = dizi[i];
+        }
+        if (dizi[0] == min) {
+            System.out.println("A -> B -> C -> D -> E " + " \nTotal time " + min);
 
-    public void setAB(int AB) {
-        this.AB = AB;
+        }
+        if (dizi[1] == min) {
+            System.out.println("A -> B -> C -> E " + " \nTotal time " + min);
+
+        }
+        if (dizi[2] == min) {
+            System.out.println("A -> B -> D -> E " + " \nTotal time " + min);
+
+        }
+        if (dizi[3] == min) {
+            System.out.println("A -> C -> D -> E " + " \nTotal time " + min);
+
+        }
+        if (dizi[4] == min) {
+            System.out.println("A -> C -> E " + "\nTotal time " + min);
+
+        }
     }
-
-    public void setAC(int AC) {
-        this.AC = AC;
-    }
-
-    public void setBC(int BC) {
-        this.BC = BC;
-    }
-
-    public void setBD(int BD) {
-        this.BD = BD;
-    }
-
-    public void setCD(int CD) {
-        this.CD = CD;
-    }
-
-    public void setCE(int CE) {
-        this.CE = CE;
-    }
-
-    public void setDE(int DE) {
-        this.DE = DE;
-    }
-
-    public int getAB() {
-        return AB;
-    }
-
-    public int getAC() {
-        return AC;
-    }
-
-    public int getBC() {
-        return BC;
-    }
-
-    public int getBD() {
-        return BD;
-    }
-
-    public int getCD() {
-        return CD;
-    }
-
-    public int getCE() {
-        return CE;
-    }
-
-    public int getDE() {
-        return DE;
-    }
-    public void Info(){
-    System.out.println("5");
-    System.out.println("A B C D E");
-    System.out.println("7");
-    System.out.println("A B "+ AB );
-    System.out.println("A C "+ AC );
-    System.out.println("B C "+ BC );
-    System.out.println("B D "+ BD );
-    System.out.println("C D "+ CD );
-    System.out.println("C E "+ CE );
-    System.out.println("D E "+ DE );
-
-    }
-
 
 }
