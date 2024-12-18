@@ -1,59 +1,30 @@
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Scanner;
+
 public class City {
-    private int AB;
-    private int AC;
-    private int BD;
-    private int BC;
-    private int CD;
-    private int CE;
-    private int DE;
 
-public City(){
- AB = 20;
- AC = 30;
- BD = 40;
- BC = 70;
- CD = 20;
- CE = 50;
- DE = 40;
- }
-    public void Info() {
-        System.out.println("5");
-        System.out.println("A B C D E");
-        System.out.println("7");
-        System.out.println("A B " + AB);
-        System.out.println("A C " + AC);
-        System.out.println("B C " + BC);
-        System.out.println("B D " + BD);
-        System.out.println("C D " + CD);
-        System.out.println("C E " + CE);
-        System.out.println("D E " + DE);
-        System.out.println("A E ");
-        int[] dizi = {AB + BC + CD + DE, AB + BC + CE, AB + BD + DE, AC + CD + DE, AC + CE};
-        int min = dizi[0];
-        for (int i = 0; i < dizi.length; i++) {
-            if (dizi[i] < min)
-                min = dizi[i];
+    public static void readFile() {
+        Scanner reader = null;
+        try {
+            reader = new Scanner(Paths.get("src/people.txt"));
+            boolean b = reader.hasNextLine();
+            {
+                System.out.println(reader.nextLine());
+                System.out.println(reader.nextLine());
+                System.out.println(reader.nextLine());
+            }
+        } catch (IOException e) {
+            System.err.println("Something went wrong.");
+        } finally {
+            if (reader != null) {
+                reader.close();
+
+            }
         }
-        if (dizi[0] == min) {
-            System.out.println("A -> B -> C -> D -> E " + " \nTotal time " + min);
-
-        }
-        if (dizi[1] == min) {
-            System.out.println("A -> B -> C -> E " + " \nTotal time " + min);
-
-        }
-        if (dizi[2] == min) {
-            System.out.println("A -> B -> D -> E " + " \nTotal time " + min);
-
-        }
-        if (dizi[3] == min) {
-            System.out.println("A -> C -> D -> E " + " \nTotal time " + min);
-
-        }
-        if (dizi[4] == min) {
-            System.out.println("A -> C -> E " + "\nTotal time " + min);
-
+    }
+         public static void main (String[]args) throws Exception {
+            readFile();
         }
     }
 
-}
