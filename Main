@@ -1,0 +1,66 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
+
+
+public class Main {
+    public static void main(String[] args) {
+        String filePath = "src/people.txt";  // File path
+        try (Scanner scanner = new Scanner(new File(filePath))) {
+            CountryMap countryMap = new CountryMap();
+            WayFinder wayFinder = new WayFinder(countryMap);
+
+            String firstLine = scanner.nextLine().trim();
+            int pointCountFromFile = Integer.parseInt(firstLine);
+
+            if (pointCountFromFile <= 0 || pointCountFromFile > CountryMap.MAX_POINTS) {
+                System.err.println("Error: The city count is invalid.");
+                return;
+            }
+
+            String secondLine = scanner.nextLine().trim();
+            String[] pointNames = secondLine.split(" ");
+            for (String point : pointNames) {
+                countryMap.addCity(point);  // Add each city to the map
+            }
+
+            String thirdLine = scanner.nextLine().trim();
+            int numberOfRoutes = Integer.parseInt(thirdLine);
+            try {
+                numberOfRoutes = Integer.parseInt(thirdLine);
+            } catch (NumberFormatException e) {
+                System.err.println("Error: The third line must contain a valid number.");
+                return;
+            }
+
+
+            // Read and add routes
+            int routeCount = 0;
+            while (scanner.hasNextLine()) {
+                String text = scanner.nextLine();
+                String[] parts = text.split(" ");
+                if (parts.length == 3) {
+                    String start = parts[0];
+                    String end = parts[1];
+                    int weight = Integer.parseInt(parts[2]);
+                    countryMap.addRoad(start, end, weight);
+                    routeCount++;
+                } else if (parts.length == 2) {
+                    String startPoint = parts[0];
+                    String endPoint = parts[1];
+
+                    // Find the shortest path if we have read all routes
+                    if (routeCount == numberOfRoutes) {
+                        wayFinder.findShortestPath(startPoint, endPoint); 
+                    } else {
+                        System.err.println("Error: The number of routes does not match the expected count.");
+                    }
+                    break;
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            System.err.println("Error: No file found at the specified path.");
+        }
+    }
+}
