@@ -1,123 +1,18 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+class City {
+    private String name;
+    private int index;
 
-public class Zır {
-
-    private static final int MAX_POINTS = 100;
-    public static int[][] graph = new int[MAX_POINTS][MAX_POINTS];
-    public static String[] points = new String[MAX_POINTS];
-    public static boolean[] visited = new boolean[MAX_POINTS];
-    public static int pointCount = 0;
-    public static String shortestPath = "";
-    public static int shortestDistance = Integer.MAX_VALUE;
-
-    public static void main(String[] args) {
-        String filePath = "src/people.txt";
-        try (Scanner scanner = new Scanner(new File(filePath))) {
-            for (int i = 0; i < MAX_POINTS; i++) {
-                for (int j = 0; j < MAX_POINTS; j++) {
-                    graph[i][j] = 0;
-                }
-            }
-
-            String firstLine = scanner.nextLine().trim();
-            int pointCountFromFile = 0;
-            try {
-                pointCountFromFile = Integer.parseInt(firstLine);
-            } catch (NumberFormatException e) {
-                System.err.println("Error: The city numbers needs to be found.");
-                return;
-            }
-            if (pointCountFromFile <= 0 || pointCountFromFile > MAX_POINTS) {
-                System.err.println("Error: The city names needs to be found ");
-                return;
-            }
-
-            String secondLine = scanner.nextLine().trim();
-            String[] pointNames = secondLine.split(" ");
-
-            if (pointNames.length != pointCountFromFile) {
-                System.err.println("Hata: Nokta sayısı ile verilen nokta isimlerinin sayısı uyuşmuyor.");
-                return;
-            }
-
-            for (int i = 0; i < pointCountFromFile; i++) {
-                points[i] = pointNames[i];
-            }
-
-            while (scanner.hasNextLine()) {
-                String text = scanner.nextLine();
-                String[] parts = text.split(" ");
-                if (parts.length == 3) {
-                    String start = parts[0];
-                    String end = parts[1];
-                    int distance = Integer.parseInt(parts[2]);
-                    int startIndex = getOrAddPoint(start);
-                    int endIndex = getOrAddPoint(end);
-                    graph[startIndex][endIndex] = distance;
-                    graph[endIndex][startIndex] = distance;
-                }
-            }
-
-
-            String startPoint = points[0];
-            String endPoint = points[pointCountFromFile - 1];
-            findPaths(startPoint, endPoint, "", 0);
-
-            System.out.println("Fastest Way: " + shortestPath);
-            System.out.println("Total Time: " + shortestDistance);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+    public City(String name, int index) {
+        this.name = name;
+        this.index = index;
     }
 
-    private static void findPaths(String current, String destination, String path, int currentDistance) {
-        path += current + " -> ";
-
-        int currentIndex = getIndex(current);
-        if (currentIndex == -1) return;
-
-        visited[currentIndex] = true;
-        if (current.equals(destination)) {
-            if (currentDistance < shortestDistance) {
-                shortestDistance = currentDistance;
-                shortestPath = path.substring(0, path.length() - 4);
-            }
-        } else {
-            for (int i = 0; i < pointCount; i++) {
-                if (graph[currentIndex][i] != 0 && !visited[i]) {
-                    int weight = graph[currentIndex][i];
-                    findPaths(points[i], destination, path, currentDistance + weight);
-                }
-            }
-        }
-        visited[currentIndex] = false;
+    public String getName() {
+        return name;
     }
-    private static int getIndex(String point) {
-        for (int i = 0; i < pointCount; i++) {
-            if (points[i].equals(point)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-    private static int getOrAddPoint(String point) {
 
-        for (int i = 0; i < pointCount; i++) {
-            if (points[i].equals(point)) {
-                return i;
-            }
-        }
-        if (pointCount < MAX_POINTS) {
-            points[pointCount] = point;
-            return pointCount++;
-        } else {
-            System.out.println("Maksimum nokta sayısına ulaşıldı.");
-            return -1;
-        }
+    public int getIndex() {
+        return index;
     }
 }
-
 
