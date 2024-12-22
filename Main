@@ -1,43 +1,67 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
-
 
 public class Main {
     public static void main(String[] args) {
-        String filePath = "src/people.txt";  // File path
-        try (Scanner scanner = new Scanner(new File(filePath))) {
+        if (args.length < 2) {
+            System.err.println("Usage: java Main <input_file_path> <output_file_path>");
+            return;
+        }
+        String inputFilePath = args[0];
+        String outputFilePath = args[1];
+
+        boolean success = false;  // Flag to check if the operation is successful
+
+        try (Scanner scan = new Scanner(new File(inputFilePath));
+             FileWriter fileWriter = new FileWriter(outputFilePath)) {
+
             CountryMap countryMap = new CountryMap();
             WayFinder wayFinder = new WayFinder(countryMap);
 
-            String firstLine = scanner.nextLine().trim();
+            // 1st Line: Get the number of cities
+            String firstLine = scan.nextLine().trim();
             int pointCountFromFile = Integer.parseInt(firstLine);
 
             if (pointCountFromFile <= 0 || pointCountFromFile > CountryMap.MAX_POINTS) {
-                System.err.println("Error: The city count is invalid.");
+                System.err.println("Error: Invalid number of cities.");
                 return;
             }
 
-            String secondLine = scanner.nextLine().trim();
-            String[] pointNames = secondLine.split(" ");
-            for (String point : pointNames) {
-                countryMap.addCity(point);  // Add each city to the map
+            // 2nd Line: Get the names of the cities
+            String secondLine = scan.nextLine().trim();
+
+            // If the second line contains a number, show an error
+            try {
+                Integer.parseInt(secondLine);
+                System.err.println("Error: The second line should not contain a number.");
+                return;
+            } catch (NumberFormatException e) {
+                // No error, continue processing
             }
 
-            String thirdLine = scanner.nextLine().trim();
-            int numberOfRoutes = Integer.parseInt(thirdLine);
+            String[] pointNames = secondLine.split(" ");
+            if (pointNames.length != pointCountFromFile) {
+                System.err.println("Error: Number of points does not match the number of point names given.");
+                return;
+            }
+
+            // 3rd Line: Get the number of routes
+            String thirdLine = scan.nextLine().trim();
+            int numberOfRoutes = -1;
+
             try {
                 numberOfRoutes = Integer.parseInt(thirdLine);
             } catch (NumberFormatException e) {
-                System.err.println("Error: The third line must contain a valid number.");
+                System.err.println("Error: The third line must be a valid number.");
                 return;
             }
 
-
-            // Read and add routes
             int routeCount = 0;
-            while (scanner.hasNextLine()) {
-                String text = scanner.nextLine();
+            while (scan.hasNextLine()) {
+                String text = scan.nextLine();
                 String[] parts = text.split(" ");
                 if (parts.length == 3) {
                     String start = parts[0];
@@ -46,21 +70,35 @@ public class Main {
                     countryMap.addRoad(start, end, weight);
                     routeCount++;
                 } else if (parts.length == 2) {
-                    String startPoint = parts[0];
+                    String startpoint = parts[0];
                     String endPoint = parts[1];
 
-                    // Find the shortest path if we have read all routes
-                    if (routeCount == numberOfRoutes) {
-                        wayFinder.findShortestPath(startPoint, endPoint); 
-                    } else {
-                        System.err.println("Error: The number of routes does not match the expected count.");
+                    // Check if the cities exist in the map
+                    if (countryMap.getCityByName(startpoint) == null || countryMap.getCityByName(endPoint) == null) {
+                        System.err.println("Error: One or both cities not found in the map.");
+                        return;  // Stop the operation in case of error
                     }
-                    break;
+
+                    if (routeCount == numberOfRoutes) {
+                        wayFinder.findShortestPath(startpoint, endPoint, fileWriter);
+                        success = true;  // The file was read successfully and the operation was performed
+                    } else {
+                        System.err.println("Error: The number of routes is less than expected.");
+                        return;  // Stop the operation in case of error
+                    }
+                    break;  // Exit the loop as the operation is already completed
                 }
             }
 
+            // Print "File read is successful!" only if the operation was successful
+            if (success) {
+                System.out.println("File read is successful!");
+            }
+
         } catch (FileNotFoundException e) {
-            System.err.println("Error: No file found at the specified path.");
+            System.err.println("Error: The specified file was not found.");
+        } catch (IOException e) {
+            System.err.println("File writing error:" + e.getMessage());
         }
     }
 }
