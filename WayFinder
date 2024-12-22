@@ -1,4 +1,6 @@
-import java.util.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
 
 class WayFinder {
     private CountryMap map;
@@ -6,53 +8,58 @@ class WayFinder {
     private String shortestPath;
     private int shortestDistance;
 
-    public WayFinder(CountryMap map) {
-        this.map = map;
+    // Constructor updated to accept only CountryMap parameter
+    public WayFinder(CountryMap map){
+        this.map=map;
         this.visited = new boolean[CountryMap.MAX_POINTS];
-        this.shortestPath = "";
+        this.shortestPath ="";
         this.shortestDistance = Integer.MAX_VALUE;
+
     }
 
-    
-    public void findShortestPath(String startCity, String endCity) {
-        Arrays.fill(visited, false);  
-        findPaths(startCity, endCity, "", 0);
-        if (shortestDistance != Integer.MAX_VALUE) {
-            System.out.println("Fastest Way: " + shortestPath);
-            System.out.println("Total Time: " + shortestDistance);
-        } else {
-            System.out.println("No path found.");
+    // Method to find the shortest path and write it to the file
+    public void findShortestPath(String startCity,String endCity,FileWriter fileWriter){
+        Arrays.fill(visited,false); // Reset the visited array
+        findPaths(startCity,endCity,"",0);
+
+        try {
+            if(shortestDistance != Integer.MAX_VALUE){
+                fileWriter.write("Fastest way: " + shortestPath +"\n");
+                fileWriter.write("Total Time: " + shortestDistance +" min "+"\n");
+            }else{
+                fileWriter.write("No path found.\n");
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing to file:"+ e.getMessage());
+
         }
     }
 
-    
-    private void findPaths(String current, String destination, String path, int currentDistance) {
-        // Add current city to the path
-        path += current + " -> ";
+    // Find the shortest path
+    private void findPaths(String current,String destination,String path,int currentDistance){
+        path += current +" -> ";
 
-        
         City currentCity = map.getCityByName(current);
-        if (currentCity == null) return; 
+        if (currentCity == null) return; // If the city is not found, return
 
         int currentIndex = currentCity.getIndex();
-        visited[currentIndex] = true; 
+        visited[currentIndex] = true; // Mark the city as visited
 
-        
-        if (current.equals(destination)) {
-            if (currentDistance < shortestDistance) {
+        // If the destination is reached, check if it's the shortest path
+        if(current.equals(destination)){
+            if(currentDistance < shortestDistance){
                 shortestDistance = currentDistance;
-                shortestPath = path.substring(0, path.length() - 4);  // Remove the last " -> "
+                shortestPath = path.substring(0,path.length() - 4); // remove the last " -> "
+
             }
-        } else {
-            // Explore all connected cities (neighbors)
-            for (int i = 0; i < map.getCityCount(); i++) {
-                if (map.getRoadWeight(currentIndex, i) != 0 && !visited[i]) {
-                    findPaths(map.getCityByIndex(i).getName(), destination, path, currentDistance + map.getRoadWeight(currentIndex, i));
+        }else{
+            for(int i = 0; i < map.getCityCount();i++){
+                if(map.getRoadWeight(currentIndex, i) !=0 && !visited[i]){
+                    findPaths(map.getCityByIndex(i).getName(),destination,path,currentDistance + map.getRoadWeight(currentIndex,i));
+
                 }
             }
         }
-
-        
-        visited[currentIndex] = false;
+        visited[currentIndex] = false; // Unmark the city to make it available for other paths
     }
 }
